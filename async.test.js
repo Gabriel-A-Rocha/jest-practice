@@ -1,6 +1,6 @@
 // callbacks
 
-// done() must be used to test callbacks
+// done() must be used to wait for callbacks
 // try/catch block is needed to log the failure reason (otherwise will be a timeout)
 
 test("Data should be coffee", (done) => {
@@ -52,14 +52,48 @@ test("Should throw if data is not tea", async () => {
   });
 });
 
-test("Test happy path with resolves", async () => {
+test("Test happy path with resolves", () => {
   const data = "tea";
 
   return expect(asyncFunction(data)).resolves.toBe("tea");
 });
 
-test("Test exception with rejects", async () => {
+test("Test exception with rejects", () => {
   const data = "not-tea";
 
   return expect(asyncFunction(data)).rejects.toBeInstanceOf(Error);
+});
+
+// async/await
+
+// catch must be used to test throws
+
+test("Data should be tea using async/await", async () => {
+  const data = "tea";
+
+  const response = await asyncFunction(data);
+
+  expect(response).toBe("tea");
+});
+
+test("Data should throw when rejected", async () => {
+  const data = "not-tea";
+
+  try {
+    await asyncFunction(data);
+  } catch (error) {
+    expect(error).toBeInstanceOf(Error);
+  }
+});
+
+test("Test async/await with resolves", () => {
+  const data = "tea";
+
+  return expect(asyncFunction(data)).resolves.toBe("tea");
+});
+
+test("Test async/await with rejects", async () => {
+  const data = "not-tea";
+
+  await expect(asyncFunction(data)).rejects.toBeInstanceOf(Error);
 });
